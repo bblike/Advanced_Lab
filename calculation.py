@@ -78,11 +78,11 @@ def rearrange(xvals, yvals, yerrs):
     return xvals, yvals, yerrs
 
 
-def calculation(x_values, y_values, y_errors):
-    assert len(y_values) == len(x_values)
-    assert len(y_errors) == len(y_values)
+def calculation(ax_values, ay_values, ay_errors):
+    assert len(ay_values) == len(ax_values)
+    assert len(ay_errors) == len(ay_values)
 
-    x_values, y_values, y_errors = rearrange(x_values, y_values, y_errors)
+    x_values, y_values, y_errors = rearrange(ax_values, ay_values, ay_errors)
 
     plt.figure(figsize=(8, 6))
     plt.errorbar(x_values,

@@ -13,7 +13,7 @@ import threading as td
 from queue import Queue
 import os
 import xlwt
-import calculation
+import calculation2
 
 
 #
@@ -42,7 +42,7 @@ def calculation_red_param(param):
             red[i][j][0] = im[i][j][0]
 
         print("process {} done.".format(i))
-    print("calculation {} down".format(param))
+    #print("calculation {} down".format(param))
 
 
 def parallel():
@@ -90,7 +90,7 @@ def threading_job():
     results.append(q.get())
     end_time = time.time()
     print("all done")
-    print("results=", results)
+    #print("results=", results)
     print("time_spent=", end_time - begin_time)
     return results
 
@@ -140,7 +140,7 @@ if __name__ == '__main__':
                     # global structure
                     structure = np.shape(im)
                     temp = rgb2gray(im)  # grey
-                    print(structure)
+                    #print(structure)
                     result = []
                     # global red_structure
                     red_structure = np.array([structure[0], structure[1], 3])
@@ -150,9 +150,9 @@ if __name__ == '__main__':
                     #
                     # parallel()
                     # temp = threading_job() #red
-                    print(temp)
-                    print("structure of temp is ", np.shape(temp))
-                    print("waiting...")
+                    #print(temp)
+                    #print("structure of temp is ", np.shape(temp))
+                    #print("waiting...")
                     # temp1 = np.array(temp[0]) #red
                     temp1 = np.array(temp)  # gray
                     new_im = Image.fromarray(temp1)
@@ -163,18 +163,18 @@ if __name__ == '__main__':
                     ypos = int(structure[1] / 2)
                     r = 12
                     new_array = temp1[xpos - r:xpos + r, ypos - r:ypos + r]
-                    print(new_array)
+                    #print(new_array)
                     means = np.mean(new_array)
                     # normaldis = count_centre(new_array)
                     stds = np.std(new_array)
-                    print("mean of {}{} = ".format(i, j), means)
-                    print("standard error of {}{} =".format(i, j), stds)
+                    #print("mean of {}{} = ".format(i, j), means)
+                    #print("standard error of {}{} =".format(i, j), stds)
                     # print("normalised result", normaldis)
                     excel_result.append([i, j, means, stds])
                     # excel_result.append([i, j, means, stds, normaldis])
 
     # save as excel files
-    print(excel_result)
+    #print(excel_result)
 
 
     new = []
@@ -200,7 +200,8 @@ if __name__ == '__main__':
             case 600:
                 group600.append(element)
 
-    groups = [[group100], [group200], [group300], [group400], [group500], [group600]]
+    groups = [[group600]]
+    #groups = [[group100], [group200], [group300], [group400], [group500], [group600]]
     for temp in groups:
         #print("temp=", temp)
         temp1 = temp[0]
@@ -228,11 +229,11 @@ if __name__ == '__main__':
                 fix = 230
         xval = fix - np.array(xval) * 2.5 + 2.5
         yerr = np.array(yerr)/25
-        if fix == 490:
-            print("xval=",xval)
-            print("yval=",yval)
-            print("new yerr =", yerr)
-        a, b = calculation.calculation(xval, yval, yerr)
+        print("here come the input values")
+        print("xval=",xval)
+        print("yval=",yval)
+        print("new yerr =", yerr)
+        a, b = calculation2.calculation(xval, yval, yerr)
         print("a,b for {} is".format(temp1[0][0]), [a, b])
         new.append([a, b])
         print("**********************************************************")
