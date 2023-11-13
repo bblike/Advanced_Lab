@@ -14,7 +14,7 @@ from queue import Queue
 import os
 import xlwt
 import calculation2
-
+import calculation3 as c3
 
 #
 
@@ -200,8 +200,8 @@ if __name__ == '__main__':
             case 600:
                 group600.append(element)
 
-    groups = [[group600]]
-    #groups = [[group100], [group200], [group300], [group400], [group500], [group600]]
+    #groups = [[group600]]
+    groups = [[group100], [group200], [group300], [group400], [group500], [group600]]
     for temp in groups:
         #print("temp=", temp)
         temp1 = temp[0]
@@ -218,17 +218,19 @@ if __name__ == '__main__':
             case 100:
                 fix = -20+360
             case 200:
-                fix = 30+360
+                fix = 30
             case 300:
-                fix = 80+360
+                fix = 80
             case 4000:
-                fix = 130+360
+                fix = 130
             case 500:
-                fix = 185+360
+                fix = 185
             case 600:
                 fix = 230
         xval = fix - np.array(xval) * 2.5 + 2.5
-        yerr = np.array(yerr)/25
+        print("yerr raw = ", yerr)
+        for i in range(len(yerr)):
+            yerr[i] = yerr[i]
         print("here come the input values")
         print("xval=",xval)
         print("yval=",yval)
@@ -240,7 +242,7 @@ if __name__ == '__main__':
 
     print(new)
 
-    xs = [100, 200, 304, 405, 511, 600]
+    xs = np.array([100, 200, 304, 405, 511, 600])
     force = np.array(xs) * 9.80665
     ys = []
     yerrs = []
@@ -249,12 +251,17 @@ if __name__ == '__main__':
         yerrs.append(element[1])
     ys = np.array(ys)
     yerrs = np.array(yerrs)
-    plt.figure()
+    ys[0] = ys[0] - 360
+    ys = (ys - 5)/180
+    ys = 1 + ys
+    yerrs = np.sqrt(yerrs**2+0.1**2)/180
+    """plt.figure()
     plt.errorbar(force, ys, yerr=yerrs)
     plt.xlabel("force")
     plt.ylabel("fringe order")
-    plt.show()
+    plt.show()"""
 
+    result = c3.calculation(force, ys, yerrs)
 
     writer = np.array(excel_result)
     book = xlwt.Workbook(encoding="utf-8", style_compression=0)

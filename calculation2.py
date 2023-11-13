@@ -44,8 +44,12 @@ def rearrange(xvals, yvals, yerrs):
                 yerrs[i], yerrs[j] = swap(yerrs[i], yerrs[j])
 
     for element in range(length):
-        yvals[element]= round(yvals[element], 7)
-        yerrs[element] = round(yerrs[element], 9)
+        if yvals[element] >= 100:
+            yvals[element]= round(yvals[element], 7)
+        else:
+            yvals[element] = round(yvals[element], 8)
+
+        yerrs[element] = round(yerrs[element]/25, 9)
 
     print("xvals=", xvals)
     print("yvals=", yvals)
@@ -53,45 +57,9 @@ def rearrange(xvals, yvals, yerrs):
     return numpy.array(xvals), numpy.array(yvals), numpy.array(yerrs)
 
 
-ix_values = numpy.array([230
-                           , 227.5
-                           , 225
-                           , 222.5
-                           , 220
-                           , 217.5
-                           , 215
-                           , 212.5
-                           , 210
-                           , 207.5
-                           , 205
-                           , 202.5
-                           , 200])
-iy_values = numpy.array([114.4664352
-                           , 113.474537
-                           , 111.4583333
-                           , 109.7719907
-                           , 109.8454861
-                           , 108.5711806
-                           , 107.0474537
-                           , 107.9756944
-                           , 107.3744213
-                           , 107.6487269
-                           , 109.0925926
-                           , 109.9479167
-                           , 112.2893519])
-iy_errors = numpy.array([0.058230491,
-                        0.054734598,
-                        0.051089971,
-                        0.065772928
-                           , 0.044746316
-                           , 0.049540277
-                           , 0.054992498
-                           , 0.03819596
-                           , 0.049435855
-                           , 0.075949406
-                           , 0.056600058
-                           , 0.063435438
-                           , 0.060568226])
+ix_values = numpy.array([340., 337.5,335., 332.5,330., 327.5,325., 322.5,320. ])
+iy_values = numpy.array([58.97569444, 53.42013889, 49.77604167, 46.20543981, 43.60821759, 45.62037037, 43.95775463, 50.57060185, 54.53587963])
+iy_errors = numpy.array([0.039051001, 0.039303102, 0.041910341, 0.042463516, 0.040927857, 0.043393437, 0.051573238, 0.066888888, 0.057636918])
 
 
 
@@ -100,21 +68,13 @@ iy_errors = numpy.array([0.058230491,
 #    return param_vals[0]+param_vals[1]*numpy.sin(param_vals[2]*x+param_vals[3])
 def calculation(ax_values, ay_values, ay_errors):
     print("modified values: ")
+
     x_values, y_values, y_errors = rearrange(ax_values, ay_values, ay_errors)
-    print(type(x_values))
-    print(x_values==ix_values)
-    print(type(y_values))
-    print(y_values==iy_values)
-    print(type(y_errors))
-    print(y_errors==iy_errors)
-    print("length check")
-    print(len(x_values)==len(ix_values))
-    print(len(y_values)==len(iy_values))
-    print(len(y_errors)==len(iy_errors))
 
-    params = [6, -4000, 600000]
 
-    plt.figure(figsize=(8, 6))
+    params = [6937.50, -42, 0.06]
+
+    """plt.figure(figsize=(8, 6))
     plt.errorbar(x_values,
                  y_values,
                  yerr=y_errors,  # use y_errors array for y error bars
@@ -124,8 +84,8 @@ def calculation(ax_values, ay_values, ay_errors):
     # plt.plot(x_values, quadratic_model(x_values, params))
 
     plt.xlabel('angle (units)')  # axis labels and units
-    plt.ylabel('intensity (units)')
-    plt.show()
+    plt.ylabel('intensity (units)')"""
+    #plt.show()
 
 
     # In[3]:
@@ -136,7 +96,7 @@ def calculation(ax_values, ay_values, ay_errors):
 
     model_function = quadratic_model
 
-    initial_values = numpy.array([6, -4000, 600000])
+    initial_values = numpy.array(params)
 
     deg_freedom = x_values.size - initial_values.size  # Make sure you understand why!
     print('DoF = {}'.format(deg_freedom))
@@ -187,7 +147,7 @@ def calculation(ax_values, ay_values, ay_errors):
     # In[9]:
 
 
-    plt.figure(figsize=(8, 6))
+    """plt.figure(figsize=(8, 6))
     plt.errorbar(x_values,
                  y_values,
                  yerr=y_errors,
@@ -199,8 +159,8 @@ def calculation(ax_values, ay_values, ay_errors):
 
     # Generate best fit line using model function and best fit parameters, and add to plot
     fit_line = model_function(x_values, [a_solution, b_solution, c_solution])
-    plt.plot(x_values, fit_line, 'r')
-    plt.show()
+    plt.plot(x_values, fit_line, 'r')"""
+    #plt.show()
 
     # In[10]:
 
@@ -330,4 +290,4 @@ def calculation(ax_values, ay_values, ay_errors):
 
     return xmin, xmin_error
 
-#calculation(ix_values, iy_values, iy_errors)
+calculation(ix_values, iy_values, iy_errors)
