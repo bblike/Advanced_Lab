@@ -13,6 +13,7 @@ import threading as td
 from queue import Queue
 import os
 import xlwt
+import calculation
 
 
 #
@@ -27,7 +28,7 @@ def calculation_red(q):
     temp = np.full((structure[0], structure[1]), 0)
     for i in range(0, red_structure[0]):
         for j in range(0, red_structure[1]):
-            temp[i][j] = im[i][j][0]
+            temp[i][j] = im[i][j][2]
             # red[i][j][1] = im[i][j][0]
 
         print("process{} done.".format(i))
@@ -106,17 +107,39 @@ path = r"C:\Users\Li Zhejun\Desktop\Advanced_Lab\thursdayw4"
 files = os.listdir(path)
 # path = "newtest.JPG"
 file_length = len(files)
-selector = [500]
+selector = [100, 200, 300, 4000, 500, 600]
 excel_result = []
+
+
+def count_centre(new_array):
+    normaldis = 0
+    midx = int(len(new_array) / 2)
+    midy = int(len(new_array[0]) / 2)
+    for n in range(len(new_array)):
+        for m in range(len(new_array[n])):
+            arg = np.sqrt((midx - n) ** 2 + (midy - m) ** 2)
+            if arg == 0:
+                normaldis += new_array[n][m] * 2
+            elif arg <= 12:
+                normaldis += new_array[n][m] / arg
+
+    return normaldis
+
+
+def count_around(array, pos):
+    return result
+
+
 if __name__ == '__main__':
     for file in files:
         for i in selector:
             for j in range(0, 20):
                 if file == "{}P{}.JPG".format(i, j):
+                    # read the image
                     im = cv.imread(r"thursdayw4\{}".format(file))
                     # global structure
                     structure = np.shape(im)
-                    temp = rgb2gray(im)
+                    temp = rgb2gray(im)  # grey
                     print(structure)
                     result = []
                     # global red_structure
@@ -124,50 +147,132 @@ if __name__ == '__main__':
                     # global red
                     red = np.zeros(red_structure)
 
+                    #
                     # parallel()
-                    # temp = threading_job()
+                    # temp = threading_job() #red
                     print(temp)
                     print("structure of temp is ", np.shape(temp))
                     print("waiting...")
-                    # temp1 = np.array(temp[0])
-                    temp1 = np.array(temp)
+                    # temp1 = np.array(temp[0]) #red
+                    temp1 = np.array(temp)  # gray
                     new_im = Image.fromarray(temp1)
-                    new_im.show()
-                    #new_im.save("temp_{}P{}.jpg".format(i, j))
+                    # new_im.show()
+                    # new_im.save("temp_{}P{}.jpg".format(i, j))
                     # goto the middle
                     xpos = int(structure[0] / 2)
                     ypos = int(structure[1] / 2)
-                    r = 30
+                    r = 12
                     new_array = temp1[xpos - r:xpos + r, ypos - r:ypos + r]
                     print(new_array)
                     means = np.mean(new_array)
-                    normaldis = 0
-                    midx = int(len(new_array) / 2)
-                    midy = int(len(new_array[0]) / 2)
-                    for n in range(len(new_array)):
-                        for m in range(len(new_array[n])):
-                            arg = np.sqrt((midx - n) ** 2 + (midy - m) ** 2)
-                            if arg == 0:
-                                normaldis += new_array[n][m] * 2
-                            elif arg <= 20:
-                                normaldis += new_array[n][m] / arg
+                    # normaldis = count_centre(new_array)
                     stds = np.std(new_array)
                     print("mean of {}{} = ".format(i, j), means)
                     print("standard error of {}{} =".format(i, j), stds)
-                    print("normalised result", normaldis)
-                    excel_result.append([i, j, means, stds, normaldis])
+                    # print("normalised result", normaldis)
+                    excel_result.append([i, j, means, stds])
+                    # excel_result.append([i, j, means, stds, normaldis])
 
+    # save as excel files
     print(excel_result)
-    """writer = np.array(excel_result)
+
+
+    new = []
+    group100 = []
+    group200 = []
+    group300 = []
+    group400 = []
+    group500 = []
+    group600 = []
+
+    for element in excel_result:
+        match element[0]:
+            case 100:
+                group100.append(element)
+            case 200:
+                group200.append(element)
+            case 300:
+                group300.append(element)
+            case 4000:
+                group400.append(element)
+            case 500:
+                group500.append(element)
+            case 600:
+                group600.append(element)
+
+    groups = [[group100], [group200], [group300], [group400], [group500], [group600]]
+    for temp in groups:
+        #print("temp=", temp)
+        temp1 = temp[0]
+        xval = []
+        yval = []
+        yerr = []
+        for element in temp1:
+            xval.append(element[1])
+            yval.append(element[2])
+            yerr.append(element[3])
+
+        fix = 0
+        match temp1[0][0]:
+            case 100:
+                fix = -20+360
+            case 200:
+                fix = 30+360
+            case 300:
+                fix = 80+360
+            case 4000:
+                fix = 130+360
+            case 500:
+                fix = 185+360
+            case 600:
+                fix = 230
+        xval = fix - np.array(xval) * 2.5 + 2.5
+        yerr = np.array(yerr)/25
+        if fix == 490:
+            print("xval=",xval)
+            print("yval=",yval)
+            print("new yerr =", yerr)
+        a, b = calculation.calculation(xval, yval, yerr)
+        print("a,b for {} is".format(temp1[0][0]), [a, b])
+        new.append([a, b])
+        print("**********************************************************")
+
+    print(new)
+
+    xs = [100, 200, 304, 405, 511, 600]
+    force = np.array(xs) * 9.80665
+    ys = []
+    yerrs = []
+    for element in new:
+        ys.append(element[0])
+        yerrs.append(element[1])
+    ys = np.array(ys)
+    yerrs = np.array(yerrs)
+    plt.figure()
+    plt.errorbar(force, ys, yerr=yerrs)
+    plt.xlabel("force")
+    plt.ylabel("fringe order")
+    plt.show()
+
+
+    writer = np.array(excel_result)
     book = xlwt.Workbook(encoding="utf-8", style_compression=0)
-    sheet = book.add_sheet('thursday', cell_overwrite_ok=True)
+    sheet = book.add_sheet('middle_step', cell_overwrite_ok=True)
+    sheet2 = book.add_sheet('2', cell_overwrite_ok=True)
     sheet.write(0, 1, "pressure")
     sheet.write(0, 2, "angle count")
     sheet.write(0, 3, "mean")
     sheet.write(0, 4, "standard error")
-    sheet.write(0, 5, "normalised results")
+
+    # sheet.write(0, 5, "normalised results")
     for i in range(len(writer)):
         for j in range(len(writer[0])):
             sheet.write(i + 1, j + 1, float("{}".format(writer[i][j])))
 
-    book.save('test.xls')"""
+    for i in range(len(force)):
+        sheet2.write(i+1, 2, float("{}".format(force[i])))
+    for i in range(len(ys)):
+        sheet2.write(i+1, 3, float("{}".format(ys[i])))
+    for i in range(len(yerrs)):
+        sheet2.write(i+1, 4, float("{}".format(yerrs[i])))
+    book.save('middle_step.xls')
