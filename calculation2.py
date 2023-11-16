@@ -49,7 +49,7 @@ def rearrange(xvals, yvals, yerrs):
         else:
             yvals[element] = round(yvals[element], 8)
 
-        yerrs[element] = round(yerrs[element]/25, 9)
+        yerrs[element] = round(yerrs[element]/70, 9) #change with the radius
 
     print("xvals=", xvals)
     print("yvals=", yvals)
@@ -290,4 +290,4 @@ def calculation(ax_values, ay_values, ay_errors):
 
     return xmin, xmin_error
 
-calculation(ix_values, iy_values, iy_errors)
+

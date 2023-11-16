@@ -238,8 +238,8 @@ def calculation(x_values, y_values, y_errors):
     m = b_solution
     m_err = b_err
 
-    D = 70.27444444
-    D_err = 0.002421611
+    D = 70.27444444 # mm
+    D_err = 0.002421611 # mm
 
     f_sigma = 8/(numpy.pi*D*m)
 
@@ -251,12 +251,12 @@ def calculation(x_values, y_values, y_errors):
     # In[16]:
 
 
-    lamda = 720*10**(-9)
-    lamda_err = 120*10**(-9)
+    lamda = 720*10**(-6) # mm
+    lamda_err = 120*10**(-6) #mm
 
     C = lamda/f_sigma
 
     C_err = C*((lamda_err/lamda)**2+(f_sigma_err/f_sigma)**2)**(1/2)
     print(C,C_err)
-
+    return [C, C_err]
 #calculation(x_val, y_val, y_err)

@@ -111,19 +111,19 @@ selector = [100, 200, 300, 4000, 500, 600]
 excel_result = []
 
 
-def count_centre(new_array):
-    normaldis = 0
+def count_centre_uniformly(new_array, r):
+    temp_array = []
     midx = int(len(new_array) / 2)
     midy = int(len(new_array[0]) / 2)
     for n in range(len(new_array)):
         for m in range(len(new_array[n])):
             arg = np.sqrt((midx - n) ** 2 + (midy - m) ** 2)
             if arg == 0:
-                normaldis += new_array[n][m] * 2
-            elif arg <= 12:
-                normaldis += new_array[n][m] / arg
+                temp_array.append(new_array[n][m])
+            elif arg <= r:
+                temp_array.append(new_array[n][m])
 
-    return normaldis
+    return np.array(temp_array)
 
 
 def count_around(array, pos):
@@ -164,9 +164,11 @@ if __name__ == '__main__':
                     r = 12
                     new_array = temp1[xpos - r:xpos + r, ypos - r:ypos + r]
                     #print(new_array)
-                    means = np.mean(new_array)
+                    r_circle = 10   # radius of the circle selected
+                    new_generated = count_centre_uniformly(new_array, r_circle)
+                    means = np.mean(new_generated)
                     # normaldis = count_centre(new_array)
-                    stds = np.std(new_array)
+                    stds = np.std(new_generated)
                     #print("mean of {}{} = ".format(i, j), means)
                     #print("standard error of {}{} =".format(i, j), stds)
                     # print("normalised result", normaldis)
@@ -175,6 +177,7 @@ if __name__ == '__main__':
 
     # save as excel files
     #print(excel_result)
+
 
 
     new = []
