@@ -130,6 +130,7 @@ def calculation(x_values, y_values, y_errors):
 
     simulated_line = model_function(smooth_xvals, [a_solution, b_solution])
     plt.plot(smooth_xvals, simulated_line, 'r')
+    plt.title("2")
     plt.show()
 
 
@@ -170,6 +171,7 @@ def calculation(x_values, y_values, y_errors):
     plt.plot(a_solution, b_solution, 'wo') # Add in best fit point and dashed lines
     plt.plot((a_solution, a_solution), (b_solution-b_range, b_solution), linestyle='--', color='w')
     plt.plot((a_solution-a_range, a_solution), (b_solution, b_solution), linestyle='--', color='w')
+    plt.title("3.1")
     plt.show()
 
 
@@ -200,6 +202,7 @@ def calculation(x_values, y_values, y_errors):
     plt.plot(a_solution, b_solution, 'ro') # Add in best fit point and dashed lines to axes
     plt.plot((a_solution, a_solution), (b_solution-b_range, b_solution), linestyle='--', color='r')
     plt.plot((a_solution-a_range, a_solution), (b_solution, b_solution), linestyle='--', color='r')
+    plt.title("contour plot")
     plt.show()
 
 
@@ -251,8 +254,8 @@ def calculation(x_values, y_values, y_errors):
     # In[16]:
 
 
-    lamda = 720*10**(-6) # mm
-    lamda_err = 120*10**(-6) #mm
+    lamda = 500*10**(-6) # mm
+    lamda_err = 50*10**(-6) #mm
 
     C = lamda/f_sigma
 

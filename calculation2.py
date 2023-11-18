@@ -49,12 +49,12 @@ def rearrange(xvals, yvals, yerrs):
         else:
             yvals[element] = round(yvals[element], 8)
 
-        yerrs[element] = round(yerrs[element]/70, 9) #change with the radius
+        yerrs[element] = round(yerrs[element], 9) #change with the radius
 
     print("xvals=", xvals)
     print("yvals=", yvals)
     print("yerrors=", yerrs)
-    return numpy.array(xvals), numpy.array(yvals), numpy.array(yerrs)
+    return list(xvals), list(yvals), list(yerrs)
 
 
 ix_values = numpy.array([340., 337.5,335., 332.5,330., 327.5,325., 322.5,320. ])
@@ -66,14 +66,28 @@ iy_errors = numpy.array([0.039051001, 0.039303102, 0.041910341, 0.042463516, 0.0
 
 # def sin_model(x, param_vals):
 #    return param_vals[0]+param_vals[1]*numpy.sin(param_vals[2]*x+param_vals[3])
-def calculation(ax_values, ay_values, ay_errors):
+def calculation(ax_values, ay_values, ay_errors, fix):
     print("modified values: ")
 
     x_values, y_values, y_errors = rearrange(ax_values, ay_values, ay_errors)
 
+    params = [25500, -148, 0.21]
+    if fix == 7:
+        params = [15000, -53, 0.0483]
+    print(params == [25500, -148, 0.21])
+    if fix == 7:
+        del x_values[6]
+        del y_values[6]
+        del y_errors[6]
+        del x_values[5]
+        del y_values[5]
+        del y_errors[5]
+    if fix == 4:
+        del x_values[6]
+        del y_values[6]
+        del y_errors[6]
 
-    params = [6937.50, -42, 0.06]
-
+    x_values, y_values, y_errors = numpy.array(x_values),numpy.array(y_values),numpy.array(y_errors)
     """plt.figure(figsize=(8, 6))
     plt.errorbar(x_values,
                  y_values,
@@ -180,6 +194,7 @@ def calculation(ax_values, ay_values, ay_errors):
 
     simulated_line = model_function(smooth_xvals, [a_solution, b_solution, c_solution])
     plt.plot(smooth_xvals, simulated_line, 'r')
+    plt.title("{}".format(fix))
     plt.show()
 
     # In[11]:
@@ -229,7 +244,7 @@ def calculation(ax_values, ay_values, ay_errors):
 
     levels = [1, 4, 9]  # Contour levels to plot - delta chi-squared of 1, 4 & 9 correspond to 1, 2 & 3 standard deviations
     #plt.figure(figsize=(7, 8))
-    contour_plot = plt.contour(X, Y, contour_data, levels=levels, colors='b', origin='lower')
+    #contour_plot = plt.contour(X, Y, contour_data, levels=levels, colors='b', origin='lower')
     #plt.clabel(contour_plot, levels, fontsize=12, inline=1, fmt=r'$\chi^2 = \chi^2_{min}+%1.0f$')
 
     #plt.xlabel('a (units?)')  # Axis labels

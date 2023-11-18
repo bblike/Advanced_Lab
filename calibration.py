@@ -31,7 +31,7 @@ def calculation_red(q):
             temp[i][j] = im[i][j][2]
             # red[i][j][1] = im[i][j][0]
 
-        print("process{} done.".format(i))
+        #print("process{} done.".format(i))
     q.put(temp)
 
 
@@ -110,8 +110,11 @@ file_length = len(files)
 xs = list(np.arange(360, 317.5, -2.5))
 for i in range(len(xs)):
     xs[i] = round(xs[i], 1)
-
-print("xs=", xs)
+structure = []
+red = []
+red_structure = []
+im = []
+#print("xs=", xs)
 
 excel_result = []
 
@@ -133,27 +136,31 @@ def count_centre_uniformly(new_array, r):
 
 
 
-if __name__ == '__main__':
+def cali():
+    print("*********************************************")
+    print("this is the start of calibration.")
     for file in files:
         for i in xs:
             if file == "{}.JPG".format(i):
                 # read the image
+                global im
                 im = cv.imread(r"calibration\{}".format(file))
-                # global structure
+                global structure
                 structure = np.shape(im)
-                # temp = rgb2gray(im)  # grey
+                temp = rgb2gray(im)  # grey
                 # print(structure)
-                result = []
+                global red_structure
                 red_structure = np.array([structure[0], structure[1], 3])
+                global red
                 red = np.zeros(red_structure)
 
                 # parallel()
-                temp = threading_job() #red
+                # temp = threading_job() #red
                 # print(temp)
                 # print("structure of temp is ", np.shape(temp))
                 # print("waiting...")
-                temp1 = np.array(temp[0]) #red
-                #temp1 = np.array(temp)  # gray
+                #temp1 = np.array(temp[0]) #red
+                temp1 = np.array(temp)  # gray
                 new_im = Image.fromarray(temp1)
                 # new_im.show()
                 # new_im.save("temp_{}P{}.jpg".format(i, j))
@@ -162,8 +169,8 @@ if __name__ == '__main__':
                 ypos = int(structure[1] / 2)
                 r = 100
                 new_array = temp1[xpos - r:xpos + r, ypos - r:ypos + r]
-                print(new_array)
-                print(np.shape(new_array))
+                #print(new_array)
+                #print(np.shape(new_array))
                 #print(new_array)
                 means = np.mean(new_array)
 
@@ -175,15 +182,16 @@ if __name__ == '__main__':
 
 
     # save as excel files
-    print(excel_result)
+    #print(excel_result)
     xval = []
     yval = []
     yerr = []
     #print("temp=", temp)
     for element in excel_result:
+        if element[1] <= 180:
             xval.append(element[0])
             yval.append(element[1])
             yerr.append(element[2])
-    C, C_error = calculation2.calculation(np.array(xval), np.array(yval), np.array(yerr))
+    C, C_error = calculation2.calculation(np.array(xval), np.array(yval), np.array(yerr), 0)
 
-    print("the minimin angle is {}+-{}.".format(C, C_error))
+    return C, C_error

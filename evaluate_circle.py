@@ -15,7 +15,7 @@ import os
 import xlwt
 import calculation2
 import calculation3 as c3
-
+import calibration as cali
 #
 
 
@@ -139,7 +139,7 @@ if __name__ == '__main__':
                     im = cv.imread(r"thursdayw4\{}".format(file))
                     # global structure
                     structure = np.shape(im)
-                    # temp = rgb2gray(im)  # grey
+                    temp = rgb2gray(im)  # grey
                     # print(structure)
                     result = []
                     # global red_structure
@@ -149,12 +149,12 @@ if __name__ == '__main__':
 
                     #
                     # parallel()
-                    temp = threading_job() #red
+                    #temp = threading_job() #red
                     # print(temp)
                     # print("structure of temp is ", np.shape(temp))
                     # print("waiting...")
-                    temp1 = np.array(temp[0]) #red
-                    #temp1 = np.array(temp)  # gray
+                    #temp1 = np.array(temp[0]) #red
+                    temp1 = np.array(temp)  # gray
                     new_im = Image.fromarray(temp1)
                     # new_im.show()
                     # new_im.save("temp_{}P{}.jpg".format(i, j))
@@ -168,7 +168,7 @@ if __name__ == '__main__':
                     new_generated = count_centre_uniformly(new_array, r_circle)
                     means = np.mean(new_generated)
                     # normaldis = count_centre(new_array)
-                    stds = np.std(new_generated)
+                    stds = np.std(new_generated)/np.sqrt(len(new_generated))
                     #print("mean of {}{} = ".format(i, j), means)
                     #print("standard error of {}{} =".format(i, j), stds)
                     # print("normalised result", normaldis)
@@ -255,9 +255,12 @@ if __name__ == '__main__':
     ys = np.array(ys)
     yerrs = np.array(yerrs)
     ys[0] = ys[0] - 360
-    ys = (ys - 5)/180
+    c,cerr = cali.cali()
+    ys = (ys + 360 - c)/180
     ys = 1 + ys
-    yerrs = np.sqrt(yerrs**2+0.1**2)/180
+    yerrs = np.sqrt(yerrs**2+(cerr/c)**2)/180
+
+
     """plt.figure()
     plt.errorbar(force, ys, yerr=yerrs)
     plt.xlabel("force")

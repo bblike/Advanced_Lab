@@ -119,7 +119,7 @@ def count_centre(new_array):
         for m in range(len(new_array[n])):
             arg = np.sqrt((midx - n) ** 2 + (midy - m) ** 2)
             if arg == 0:
-                normaldis += new_array[n][m] * 2
+                normaldis += new_array[n][m] * 3
             elif arg <= 12:
                 normaldis += new_array[n][m] / arg
 
@@ -166,7 +166,7 @@ if __name__ == '__main__':
                     #print(new_array)
                     means = np.mean(new_array)
                     # normaldis = count_centre(new_array)
-                    stds = np.std(new_array)
+                    stds = np.std(new_array)/np.sqrt(len(new_array))
                     #print("mean of {}{} = ".format(i, j), means)
                     #print("standard error of {}{} =".format(i, j), stds)
                     # print("normalised result", normaldis)
