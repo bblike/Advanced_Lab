@@ -254,8 +254,9 @@ def calculation(x_values, y_values, y_errors):
     # In[16]:
 
 
-    lamda = 500*10**(-6) # mm
-    lamda_err = 50*10**(-6) #mm
+    lamda = 530*10**(-6) # mm
+    lamda_err = 60*10**(-6) #mm
+    #lamda_err = 0 # mm
 
     C = lamda/f_sigma
 

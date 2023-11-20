@@ -62,9 +62,8 @@ if __name__ == '__main__':
                         circles = np.uint16(np.around(circles))
                         for n in circles[0, :]:
                             arr1 = np.append(arr1, [n[0], n[1]])
-                    # new_im.show()
-                    # new_im.save("temp_{}P{}.jpg".format(i, j))
-                    # goto the middle
+
+                    # select the centre area
                     print("begin")
                     print(arr1)
                     selected = list([arr1[0], arr1[1]])
