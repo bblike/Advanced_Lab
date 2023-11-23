@@ -8,12 +8,13 @@ import scipy.optimize
 import scipy.stats
 import \
     matplotlib.ticker as ticker
+
+
 # In[2]:
 
 def quadratic_model(x, param_vals):
-    #print(param_vals)
+    # print(param_vals)
     return param_vals[0] + param_vals[1] * x + param_vals[2] * x ** 2
-
 
 
 def linear_model(x, param_vals):
@@ -26,12 +27,12 @@ def linear_model(x, param_vals):
 def chi_squared(model_params, model, x_data, y_data, y_error):
     return numpy.sum(((y_data - model(x_data, model_params)) / y_error) ** 2)
 
+
 def swap(a, b):
     temp = b
     b = a
     a = temp
     return a, b
-
 
 
 def rearrange(xvals, yvals, yerrs):
@@ -45,11 +46,11 @@ def rearrange(xvals, yvals, yerrs):
 
     for element in range(length):
         if yvals[element] >= 100:
-            yvals[element]= round(yvals[element], 7)
+            yvals[element] = round(yvals[element], 7)
         else:
             yvals[element] = round(yvals[element], 8)
 
-        yerrs[element] = round(yerrs[element], 9) #change with the radius
+        yerrs[element] = round(yerrs[element], 9)  # change with the radius
 
     print("xvals=", xvals)
     print("yvals=", yvals)
@@ -57,11 +58,13 @@ def rearrange(xvals, yvals, yerrs):
     return list(xvals), list(yvals), list(yerrs)
 
 
-ix_values = numpy.array([340., 337.5,335., 332.5,330., 327.5,325., 322.5,320. ])
-iy_values = numpy.array([58.97569444, 53.42013889, 49.77604167, 46.20543981, 43.60821759, 45.62037037, 43.95775463, 50.57060185, 54.53587963])
-iy_errors = numpy.array([0.039051001, 0.039303102, 0.041910341, 0.042463516, 0.040927857, 0.043393437, 0.051573238, 0.066888888, 0.057636918])
-
-
+ix_values = numpy.array([340., 337.5, 335., 332.5, 330., 327.5, 325., 322.5, 320.])
+iy_values = numpy.array(
+    [58.97569444, 53.42013889, 49.77604167, 46.20543981, 43.60821759, 45.62037037, 43.95775463, 50.57060185,
+     54.53587963])
+iy_errors = numpy.array(
+    [0.039051001, 0.039303102, 0.041910341, 0.042463516, 0.040927857, 0.043393437, 0.051573238, 0.066888888,
+     0.057636918])
 
 
 # def sin_model(x, param_vals):
@@ -75,6 +78,8 @@ def calculation(ax_values, ay_values, ay_errors, fix):
     if fix == 7:
         params = [15000, -53, 0.0483]
     print(params == [25500, -148, 0.21])
+
+    # delete because of the unexpected rediculous error
     if fix == 7:
         del x_values[6]
         del y_values[6]
@@ -87,7 +92,7 @@ def calculation(ax_values, ay_values, ay_errors, fix):
         del y_values[6]
         del y_errors[6]
 
-    x_values, y_values, y_errors = numpy.array(x_values),numpy.array(y_values),numpy.array(y_errors)
+    x_values, y_values, y_errors = numpy.array(x_values), numpy.array(y_values), numpy.array(y_errors)
     """plt.figure(figsize=(8, 6))
     plt.errorbar(x_values,
                  y_values,
@@ -99,14 +104,11 @@ def calculation(ax_values, ay_values, ay_errors, fix):
 
     plt.xlabel('angle (units)')  # axis labels and units
     plt.ylabel('intensity (units)')"""
-    #plt.show()
-
+    # plt.show()
 
     # In[3]:
 
-
     # In[4]:
-
 
     model_function = quadratic_model
 
@@ -115,13 +117,13 @@ def calculation(ax_values, ay_values, ay_errors, fix):
     deg_freedom = x_values.size - initial_values.size  # Make sure you understand why!
     print('DoF = {}'.format(deg_freedom))
 
-    fit_linear = scipy.optimize.minimize(chi_squared, initial_values, args=(model_function, x_values, y_values, y_errors))
+    fit_linear = scipy.optimize.minimize(chi_squared, initial_values,
+                                         args=(model_function, x_values, y_values, y_errors))
 
     print(fit_linear.success)  # Did the minimisation complete successfully?
     print(fit_linear.message)
 
     # In[5]:
-
 
     a_solution = fit_linear.x[0]
     b_solution = fit_linear.x[1]
@@ -136,13 +138,10 @@ def calculation(ax_values, ay_values, ay_errors, fix):
 
     # In[6]:
 
-
     # xmin = (-b_solution)/(2*c_solution)
     # print(xmin)
 
-
     # In[7]:
-
 
     chisq_min = chi_squared([a_solution, b_solution, c_solution], model_function, x_values, y_values, y_errors)
     print('chi^2_min = {}'.format(chisq_min))
@@ -152,14 +151,10 @@ def calculation(ax_values, ay_values, ay_errors, fix):
 
     # In[8]:
 
-
-
-
     P_value = scipy.stats.chi2.sf(chisq_min, deg_freedom)
     print('P(chi^2_min, DoF) = {}'.format(P_value))
 
     # In[9]:
-
 
     """plt.figure(figsize=(8, 6))
     plt.errorbar(x_values,
@@ -174,10 +169,9 @@ def calculation(ax_values, ay_values, ay_errors, fix):
     # Generate best fit line using model function and best fit parameters, and add to plot
     fit_line = model_function(x_values, [a_solution, b_solution, c_solution])
     plt.plot(x_values, fit_line, 'r')"""
-    #plt.show()
+    # plt.show()
 
     # In[10]:
-
 
     smooth_xvals = numpy.linspace(min(x_values), max(x_values), 1000)
     # make a smoother line - use 1000 equally spaced points over the range of the measured points.
@@ -199,7 +193,6 @@ def calculation(ax_values, ay_values, ay_errors, fix):
 
     # In[11]:
 
-
     a_range = 1
     b_range = 0.05
 
@@ -211,8 +204,9 @@ def calculation(ax_values, ay_values, ay_errors, fix):
     plot_data = numpy.zeros((n_points, n_points))
 
     for i, b_val in enumerate(b_axis):  # Nested loops to demonstrate what is happening...
-        for j, a_val in enumerate(a_axis):  # (numpy can actually do this far more efficiently as a vectorised calculation)
-            #plot_data[i][j] = chi_squared([a_val, b_val], model_function, x_values, y_values, y_errors)
+        for j, a_val in enumerate(
+                a_axis):  # (numpy can actually do this far more efficiently as a vectorised calculation)
+            # plot_data[i][j] = chi_squared([a_val, b_val], model_function, x_values, y_values, y_errors)
             pass
     # In[ ]:
 
@@ -242,27 +236,28 @@ def calculation(ax_values, ay_values, ay_errors, fix):
     X, Y = numpy.meshgrid(a_axis, b_axis, indexing='xy')
     contour_data = plot_data - chisq_min
 
-    levels = [1, 4, 9]  # Contour levels to plot - delta chi-squared of 1, 4 & 9 correspond to 1, 2 & 3 standard deviations
-    #plt.figure(figsize=(7, 8))
-    #contour_plot = plt.contour(X, Y, contour_data, levels=levels, colors='b', origin='lower')
-    #plt.clabel(contour_plot, levels, fontsize=12, inline=1, fmt=r'$\chi^2 = \chi^2_{min}+%1.0f$')
+    levels = [1, 4,
+              9]  # Contour levels to plot - delta chi-squared of 1, 4 & 9 correspond to 1, 2 & 3 standard deviations
+    # plt.figure(figsize=(7, 8))
+    # contour_plot = plt.contour(X, Y, contour_data, levels=levels, colors='b', origin='lower')
+    # plt.clabel(contour_plot, levels, fontsize=12, inline=1, fmt=r'$\chi^2 = \chi^2_{min}+%1.0f$')
 
-    #plt.xlabel('a (units?)')  # Axis labels
-    #plt.ylabel('b (units?)')
+    # plt.xlabel('a (units?)')  # Axis labels
+    # plt.ylabel('b (units?)')
 
     # This allows you to modify the tick markers to assess the errors from the chi-squared contour plots.
 
     xtick_spacing = 0.25
     ytick_spacing = 0.02
 
-    #ax = plt.gca()
-    #ax.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
-    #ax.yaxis.set_major_locator(ticker.MultipleLocator(ytick_spacing))
+    # ax = plt.gca()
+    # ax.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
+    # ax.yaxis.set_major_locator(ticker.MultipleLocator(ytick_spacing))
 
-    #plt.plot(a_solution, b_solution, 'ro')  # Add in best fit point and dashed lines to axes
-    #plt.plot((a_solution, a_solution), (b_solution - b_range, b_solution), linestyle='--', color='r')
-    #plt.plot((a_solution - a_range, a_solution), (b_solution, b_solution), linestyle='--', color='r')
-    #plt.show()
+    # plt.plot(a_solution, b_solution, 'ro')  # Add in best fit point and dashed lines to axes
+    # plt.plot((a_solution, a_solution), (b_solution - b_range, b_solution), linestyle='--', color='r')
+    # plt.plot((a_solution - a_range, a_solution), (b_solution, b_solution), linestyle='--', color='r')
+    # plt.show()
 
     # In[13]:
 
@@ -283,7 +278,6 @@ def calculation(ax_values, ay_values, ay_errors, fix):
     """
     # In[14]:
 
-
     errs_Hessian = numpy.sqrt(numpy.diag(2 * fit_linear.hess_inv))
 
     b_err = errs_Hessian[1]
@@ -294,7 +288,6 @@ def calculation(ax_values, ay_values, ay_errors, fix):
 
     # In[15]:
 
-
     xmin = (-b_solution) / (2 * c_solution)
     print(xmin)
 
@@ -304,5 +297,3 @@ def calculation(ax_values, ay_values, ay_errors, fix):
     print('Minimum angle = {} +/- {}'.format(xmin, xmin_error))
 
     return xmin, xmin_error
-
-
