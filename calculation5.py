@@ -75,10 +75,15 @@ def calculation(ax_values, ay_values, ay_errors, fix):
     x_values, y_values, y_errors = rearrange(ax_values, ay_values, ay_errors)
 
     params = [25500, -148, 0.21]
-    if fix == 7:
-        params = [44000, -82.274, 0.0386]
-    if fix == 4:
-        params = [13134, -40, 0.0308]
+    match fix:
+        case 7:
+            params = [10686, -40, 0.0386]
+        case 4:
+            params = [13134, -40, 0.0308]
+        case 5:
+            params = [5273, -24.92, 0.0296]
+        case 6:
+            params = [7394, -31.235, 0.0331]
 
 
 
@@ -215,7 +220,7 @@ def calculation(ax_values, ay_values, ay_errors, fix):
     plt.xlabel('a (units?)')
 
     cbar = plt.colorbar(im, orientation='vertical')  # # Colorbar and label
-    cbar.set_label('$\chi^2$', fontsize=12)
+    cbar.set_label(r'$\chi^2$', fontsize=12)
 
     plt.plot(a_solution, b_solution, 'wo')  # Add in best fit point and dashed lines
     plt.plot((a_solution, a_solution), (b_solution - b_range, b_solution), linestyle='--', color='w')

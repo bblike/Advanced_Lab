@@ -28,9 +28,9 @@ files = os.listdir(path)
 file_length = len(files)
 selector = [1, 2, 3, 4, 5, 6, 7]
 excel_result = []
-diameter = [69.23, 0.02]
+diameter = [69, 0.006]
 thickness = [9.590,0.002]
-lamb = [500, 50]
+lamb = [545, 50]
 centre = []
 
 def count_centre_uniformly(new_array, r):
@@ -48,10 +48,6 @@ def count_centre_uniformly(new_array, r):
     return np.array(temp_array)
 
 
-def count_around(array, pos):
-    return result
-
-
 if __name__ == '__main__':
     for file in files:
         for i in selector:
@@ -59,7 +55,7 @@ if __name__ == '__main__':
                 if file == "{}P{}.JPG".format(i, j):
 
                     im = cv.imread(r"C:\Users\Li Zhejun\Desktop\Advanced_Lab\thiner_green\{}".format(file), 0)
-                    print(np.shape(im))
+                    #print(np.shape(im))
                     circles = cv.HoughCircles(im, cv2.HOUGH_GRADIENT,1, 200, param2=20, minRadius=200, maxRadius=400)
                     arr1 = np.zeros([0, 2], dtype=int)
                     if circles is not None:
@@ -68,20 +64,20 @@ if __name__ == '__main__':
                             arr1 = np.append(arr1, [n[0], n[1]])
 
                     # select the centre area
-                    print("begin")
-                    print("arr1=", arr1)
+                    #print("begin")
+                    #print("arr1=", arr1)
                     selected = list([arr1[0], arr1[1]])
-                    print(selected)
+                    #print(selected)
                     centre.append(selected)
-                    print(np.shape(selected))
+                    #print(np.shape(selected))
 
                     for m in range(2, len(arr1), 2):
                         arg1 = np.sqrt((2816/2-arr1[m])**2+(2108/2 -arr1[m+1])**2)
                         arg2 = np.sqrt((2816/2-selected[0])**2+(2108/2 -selected[1])**2)
                         if arg1 < arg2:
                             selected = np.array([arr1[m], arr1[m+1]])
-                    print("selected=",selected)
-                    print(np.shape(selected))
+                    #print("selected=",selected)
+                    #print(np.shape(selected))
                     assert np.shape(selected) == (2,)
 
                     r = 23
@@ -159,17 +155,17 @@ if __name__ == '__main__':
             case 1:
                 fix = 290
             case 2:
-                fix = 420
+                fix = 330
             case 3:
-                fix = 560
+                fix = 380
             case 4:
-                fix = 680
+                fix = 410
             case 5:
-                fix = 810
+                fix = 450
             case 6:
-                fix = 960
+                fix = 510
             case 7:
-                fix = 1090
+                fix = 550
         xval = fix - np.array(xval) * 2.5 + 2.5
 
         print("here come the input values")
@@ -184,7 +180,7 @@ if __name__ == '__main__':
 
     print(new)
 
-    xs = np.array([109.3, 207.0, 295.2, 402.3, 481.9, 545.9 ,614.7])
+    xs = np.array([109.3, 207.0, 295.2, 402.3, 481.9, 545.9, 614.7])
     force = np.array(xs) * 9.80665
     ys = []
     yerrs = []

@@ -48,7 +48,7 @@ def chi_squared(model_params, model, x_data, y_data, y_error):
 def calculation(x_values, y_values, y_errors, diameter, thickness, lamb0):
     model_function = linear_model
 
-    initial_values = numpy.array([0.0, 1.0])
+    initial_values = numpy.array([0, 10**(-6)])
 
 
     deg_freedom = x_values.size - initial_values.size # Make sure you understand why!
@@ -166,8 +166,7 @@ def calculation(x_values, y_values, y_errors, diameter, thickness, lamb0):
     plt.xlabel('a (units?)')
 
     cbar=plt.colorbar(im, orientation='vertical') # # Colorbar and label
-    cbar.set_label('$\chi^2$', fontsize=12)
-
+    cbar.set_label(r'$\chi^2$', fontsize=12)
     plt.plot(a_solution, b_solution, 'wo') # Add in best fit point and dashed lines
     plt.plot((a_solution, a_solution), (b_solution-b_range, b_solution), linestyle='--', color='w')
     plt.plot((a_solution-a_range, a_solution), (b_solution, b_solution), linestyle='--', color='w')
