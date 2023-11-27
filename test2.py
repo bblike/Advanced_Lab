@@ -1,7 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2 as cv
-path = r"C:\Users\Li Zhejun\Desktop\Advanced_Lab\test (4).JPG"
+path = r"C:\Users\Li Zhejun\Desktop\Advanced_Lab\CIMG4289.JPG"
+
+
 im = cv.imread(path)
 
 blue = np.array(im)
@@ -21,6 +23,9 @@ for i in range(len(im)):
 
 print("waiting...")
 cv.waitKey(1000)
+cv.namedWindow("red", 0)
+cv.namedWindow("green", 0)
+cv.namedWindow("blue", 0)
 cv.imshow("red", red)
 cv.imshow("green", green)
 cv.imshow("blue", blue)
