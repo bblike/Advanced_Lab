@@ -18,11 +18,11 @@ import calculation2
 import calculation3 as c3
 import calibration as cali
 import calculation4
-
+import interactive as inte
 #
 
 
-path = r"C:\Users\Li Zhejun\Desktop\Advanced_Lab\fridayw7"
+path = r"C:\Users\{}\Desktop\Advanced_Lab\fridayw7".format(inte.name)
 files = os.listdir(path)
 # path = "newtest.JPG"
 file_length = len(files)

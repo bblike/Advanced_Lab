@@ -48,7 +48,8 @@ def chi_squared(model_params, model, x_data, y_data, y_error):
 def calculation(x_values, y_values, y_errors, diameter, thickness, lamb0):
     model_function = linear_model
 
-    initial_values = numpy.array([0, 10**(-6)])
+    #initial_values = numpy.array([0, 10**(-6)])
+    initial_values = numpy.array([1, 10 ** (-5)])
 
 
     deg_freedom = x_values.size - initial_values.size # Make sure you understand why!

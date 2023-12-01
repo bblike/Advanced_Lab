@@ -2,33 +2,24 @@
 import cv2
 import numpy as np
 import cv2 as cv
-import matplotlib.pyplot as plt
-import sys
-import multiprocessing as mp
-import datetime
-import math
-import time
-
-from PIL import Image
-import threading as td
-from queue import Queue
 import os
 import xlwt
-import calculation2
-import calculation3 as c3
-import calibration as cali
-import calculation4
+import calculation4 as c4
+import calculation6 as c6
 import interactive as inte
 #
 
 
-path = r"C:\Users\{}\Desktop\Advanced_Lab\fridayw7".format(inte.name)
+path = r"C:\Users\{}\Desktop\Advanced_Lab\last_groups\large_size".format(inte.name[0])
 files = os.listdir(path)
 # path = "newtest.JPG"
 file_length = len(files)
 selector = [1, 2, 3, 4, 5, 6, 7]
 excel_result = []
-
+diameter = [100, 0.006]
+thickness = [12,0.002]
+lamb = [545, 50]
+centre = []
 
 def count_centre_uniformly(new_array, r):
     temp_array = []
@@ -45,19 +36,15 @@ def count_centre_uniformly(new_array, r):
     return np.array(temp_array)
 
 
-def count_around(array, pos):
-    return result
-
-
 if __name__ == '__main__':
     for file in files:
         for i in selector:
-            for j in range(0, 25):
+            for j in range(0, 30):
                 if file == "{}P{}.JPG".format(i, j):
 
-                    im = cv.imread(r"fridayw7\{}".format(file), 0)
-
-                    circles = cv.HoughCircles(im, cv2.HOUGH_GRADIENT, 1, 200, param2=30)
+                    im = cv.imread(r"C:\Users\{}}\Desktop\Advanced_Lab\last_groups\large_size\{}".format(inte.name[0], file), 0)
+                    #print(np.shape(im))
+                    circles = cv.HoughCircles(im, cv2.HOUGH_GRADIENT,1, 200, param2=20, minRadius=200, maxRadius=400)
                     arr1 = np.zeros([0, 2], dtype=int)
                     if circles is not None:
                         circles = np.uint16(np.around(circles))
@@ -65,22 +52,37 @@ if __name__ == '__main__':
                             arr1 = np.append(arr1, [n[0], n[1]])
 
                     # select the centre area
-                    print("begin")
-                    print(arr1)
+                    #print("begin")
+                    #print("arr1=", arr1)
                     selected = list([arr1[0], arr1[1]])
-                    print(selected)
-                    print(np.shape(selected))
+                    #print(selected)
+                    centre.append(selected)
+                    #print(np.shape(selected))
+
                     for m in range(2, len(arr1), 2):
-                        if np.abs(arr1[m]-arr1[m+1]) < np.abs(selected[0]-selected[1]):
+                        arg1 = np.sqrt((2816/2-arr1[m])**2+(2108/2 -arr1[m+1])**2)
+                        arg2 = np.sqrt((2816/2-selected[0])**2+(2108/2 -selected[1])**2)
+                        if arg1 < arg2:
                             selected = np.array([arr1[m], arr1[m+1]])
-                    print(selected)
-                    print(np.shape(selected))
+                    #print("selected=",selected)
+                    #print(np.shape(selected))
                     assert np.shape(selected) == (2,)
 
-                    r = 20
-                    new_array = im[selected[0] - r:selected[0] + r, selected[1] - r:selected[1] + r]
-                    #print(new_array)
-                    r_circle = 10   # radius of the circle selected
+                    r = 23
+                    new_array = im[selected[1] - r:selected[1] + r, selected[0] - r:selected[0] + r]
+                    # im2 = cv.imread(r"C:\Users\Li Zhejun\Desktop\Advanced_Lab\thiner_green\{}".format(file))
+                    """
+                    for o in np.arange(selected[1] - r, selected[1] + r):
+                        for p in np.arange(selected[0] - r, selected[0] + r):
+                            im2[o][p] = [255, 0, 0]
+                    cv.namedWindow("test", 0)
+                    cv.imshow("test", im2)
+
+                    cv.waitKey(1000)
+                    cv.destroyAllWindows()
+                    #print(new_array)"""
+
+                    r_circle = 20   # radius of the circle selected
                     new_generated = count_centre_uniformly(new_array, r_circle)
                     means = np.mean(new_generated)
                     # normaldis = count_centre(new_array)
@@ -139,19 +141,19 @@ if __name__ == '__main__':
         fix = 0
         match temp1[0][0]:
             case 1:
-                fix = 270
+                fix = 350
             case 2:
-                fix = 320
+                fix = 380
             case 3:
-                fix = 375
-            case 4:
                 fix = 420
+            case 4:
+                fix = 450
             case 5:
-                fix = 460
+                fix = 490
             case 6:
                 fix = 520
             case 7:
-                fix = 570
+                fix = 550
         xval = fix - np.array(xval) * 2.5 + 2.5
 
         print("here come the input values")
@@ -159,14 +161,14 @@ if __name__ == '__main__':
         print("yval=",yval)
         print("new yerr =", yerr)
 
-        a, b = calculation2.calculation(xval, yval, yerr, temp1[0][0])
+        a, b = c6.calculation(xval, yval, yerr, temp1[0][0])
         print("a,b for {} is".format(temp1[0][0]), [a, b])
         new.append([a, b])
         print("**********************************************************")
 
     print(new)
 
-    xs = np.array([118.6, 217.4, 310.7, 389.7, 464.4, 547.2, 649.1])
+    xs = np.array([108.2, 207.8, 308.6, 384.35, 473.95, 554.6, 630.85])
     force = np.array(xs) * 9.80665
     ys = []
     yerrs = []
@@ -174,9 +176,10 @@ if __name__ == '__main__':
         ys.append(element[0])
         yerrs.append(element[1])
     ys = np.array(ys)
+    print("ys=", ys)
     yerrs = np.array(yerrs)
-    c,cerr = cali.cali()
-    ys = (ys + 360 - c)/180
+    c,cerr = 5, 0
+    ys = (ys - c)/180
     ys = 1 + ys
     yerrs = np.sqrt(yerrs**2+(cerr/c)**2)/180
 
@@ -187,7 +190,7 @@ if __name__ == '__main__':
     plt.ylabel("fringe order")
     plt.show()"""
 
-    result = c3.calculation(force, ys, yerrs)
+    result = c4.calculation(force, ys, yerrs, diameter, thickness, lamb)
 
     print("result=", result)
     """

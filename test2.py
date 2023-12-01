@@ -1,7 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2 as cv
-path = r"C:\Users\Li Zhejun\Desktop\Advanced_Lab\CIMG4289.JPG"
+import interactive
+path = r"C:\Users\{}\Desktop\Advanced_Lab\CIMG4289.JPG".format(interactive.name)
 
 
 im = cv.imread(path)
