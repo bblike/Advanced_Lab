@@ -23,7 +23,7 @@ import interactive as inte
 #
 
 
-path = r"C:\Users\{}\Desktop\Advanced_Lab\last_groups\small_size".format(inte.name[0])
+path = r"C:\Users\{}\Desktop\Advanced_Lab\last_groups\small_size".format(inte.name)
 files = os.listdir(path)
 # path = "newtest.JPG"
 file_length = len(files)
@@ -55,7 +55,7 @@ if __name__ == '__main__':
             for j in range(0, 30):
                 if file == "{}P{}.JPG".format(i, j):
 
-                    im = cv.imread(r"C:\Users\{}}\Desktop\Advanced_Lab\last_groups\small_size\{}".format(inte.name[0], file), 0)
+                    im = cv.imread(r"C:\Users\{}}\Desktop\Advanced_Lab\last_groups\small_size\{}".format(inte.name, file), 0)
                     #print(np.shape(im))
                     circles = cv.HoughCircles(im, cv2.HOUGH_GRADIENT,1, 200, param2=20, minRadius=200, maxRadius=400)
                     arr1 = np.zeros([0, 2], dtype=int)

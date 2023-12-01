@@ -1,1 +1,1 @@
-name = ["Li Zhejun"]
+name = "Li Zhejun"

@@ -15,6 +15,7 @@ import os
 import xlwt
 import calculation2
 import calculation3 as c3
+import interactive as inte
 
 #
 
@@ -103,7 +104,7 @@ def print_image(x):
     cv.imwrite("raw-r.jpg", x)
 
 
-path = r"C:\Users\Li Zhejun\Desktop\Advanced_Lab\calibration"
+path = r"C:\Users\{}\Desktop\Advanced_Lab\calibration".format(inte.name)
 files = os.listdir(path)
 # path = "newtest.JPG"
 file_length = len(files)
